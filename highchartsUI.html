@@ -13,8 +13,9 @@
     </select>
     
     <h3>Extent</h3>
-    <select>
-    
+    <select name="extent" id="extent">
+    	<option value="entire">Entire Domain</option>
+	<option value="selected">Selected Cells</option>
     </select>
     
     <h3>Time Period</h3>
@@ -23,13 +24,16 @@
     </select>
     
     <h3>Variable</h3>
-    <select>
-    
+    <select name="vars" id="vars">
+    	<option value="input">Model Input</option>
+	<option value="output">Model Output</option>
+	<option value="boundary" id="boundary_conidtions">Boundary Conditions
+	</option>
     </select>
     
     <h3>Data Type</h3>
     <select>
-    
+     
     </select>
     
     <button type="button">Visualize Data</button>
