@@ -7,31 +7,41 @@
 <body>
     <h3>Scenario</h3>
     <select name="scenario" id="scenario">
+		<option>--Select Scenario--</option>
         <option value="base">Base Case (Default)</option>
         <option value="reef">Oyster Reef</option>
         <option value="calcasieu">Calcasieu</option>
     </select>
     
     <h3>Extent</h3>
-    <select>
-    
+    <select name="extent" id="extent">
+		<option>--Select Extent--</option>
+    <option value="entire">Entire Domain</option>
+	<option value="selected">Selected Cells</option>
     </select>
     
     <h3>Time Period</h3>
-    <select>
-    
-    </select>
+    Start Date: <input type="text" name="Start Date" value=""><br><br>
+	End Date: <input type="text" name="End Date" value="">
     
     <h3>Variable</h3>
-    <select>
-    
+    <select name="vars" id="vars">
+		<option>--Select Variable--</option>
+    <option value="input">Model Input</option>
+	<option value="output">Model Output</option>
+	<option value="boundary" id="boundary_conidtions">Boundary Conditions
+	</option>
     </select>
     
     <h3>Data Type</h3>
-    <select>
-    
+    <select name="type" id="type">
+		<option>--Select Data Type--</option>
+	<option value="precipitation">Precipitation (m)</option>
+	<option value="evapo">Evapotranspiration (m)</option>
+	<option value="temp">Temperature (C)</option>
+     
     </select>
-    
+    <br><br>
     <button type="button">Visualize Data</button>
     
 </body>
