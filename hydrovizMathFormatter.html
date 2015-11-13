@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Math Equation Formatter</title>
+    <style>
+        .Sample_equation {
+            font-weight: bold;
+            font-style: italic;
+        }
+        .Math_eq {
+            font-weight: bold;
+            font-style: italic;
+        }
+        .fraction {
+            width: auto;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .fraction-top {
+            padding: 5px;
+            border-bottom: solid 1px black;
+            width: auto;
+            text-align: center;
+        }
+        .fraction-bottom {
+            padding: 5px;
+            width: auto;
+            text-align: center;
+        }
+    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+        // Format_equation when called on a jquery selector:
+        //		replaces 
+        $.fn.Format_equation = function () {
+            /* get the text from the container
+                    - $(this) is the current 'Math_eq' ;
+                    - i'm using trim() to remove any surrounding white space from
+                      the text (recommended to avoid headache later on)
+            */
+            var raw_string = $(this).text().trim();
+            var parse_tree;
+            var formatted_html;
+
+            // generate parse tree via parsing the raw_string COMMENTED SO WE CAN TEST
+            //parse_tree = parse_eq_text(raw_string);
+            
+            //A test case : (x - y) * 5
+            parse_tree = ["=",["_","x","i"],["\\frac",["+","n","1"],["+","n",["-","1","i"]]]];
+
+            /* 
+                replace equations in parse tree with formatted html   
+                    I recommend creating a method that accepts an equation object, 
+                    i.e. convert_eq(['x','eq1','eq2']) 
+            */
+
+            /*
+                the ultimate goal is to have a method that returns the html string
+                or jquery 
+            */
+            formatted_html = convert_eq(parse_tree);
+
+
+            // replace the text of the current 'Math_eq'
+            // commented out for now until you get the functionality in place
+            $(this).html(formatted_html)
+        };
+
+        // parse text into equation object 
+        function parse_eq_text(equation_text) {
+            // this method is intended to return a single equation object
+
+            return false;
+        }
+
+
+        // this method will be recursive
+        function convert_eq(equation_obj) {
+            // you will need to map any operators to the replacement html
+            //  	most likely creating separate Functions for each operator 
+            // 		will be the easiest way to keep this function from
+            //		becoming too large and difficult to navigate.
+            var exc, operator, leftHand, rightHand;
+            
+            //if we have an array access error, this means that the equation was
+            //improperly formed.
+            try
+            {
+                if(typeof equation_obj === 'string')
+                {
+                    return equation_obj;
+                }
+                operator = equation_obj[0];
+                //console.log("Successfully Extracted Operator: " + operator);
+                //paren is the only unary operator we will have to deal with
+                if(operator == "\\paren")
+                {
+                    return "( " + convert_eq(equation_obj[1]) + ")";
+                }
+                //if not paren, then we have a binary operator
+                else
+                {
+                    leftHand = convert_eq(equation_obj[1]);
+                    rightHand = convert_eq(equation_obj[2]);
+                }
+                
+                //now that we have the full HTML for each part of the equation
+                //we can begin to construct the equation HTML based on the operator
+                
+                if(operator == "\\frac")
+                {
+                    return "<div class=\"fraction\"> \n" +
+                                "\t<div class=\"fraction-top\"> " + leftHand + " </div> \n" +
+                                "\t<div class=\"fraction-bottom\"> " + rightHand + " </div> \n" +
+                            "</div>";
+                }
+                else if(operator == "+" 
+                    || operator == "-" 
+                    || operator == "*" 
+                    || operator == "/" 
+                    || operator == "=")
+                {
+                    return leftHand + " " + operator + " " + rightHand;
+                }
+                else if(operator == "^")
+                {
+                    return leftHand + "<sup>" + rightHand + "</sup>";
+                }
+                else if(operator == "_")
+                {
+                    return leftHand + "<sub>" + rightHand + "</sub>";
+                }
+                else
+                {
+                    console.log("Invalid Operator");
+                    throw "INVALID OPERATOR";
+                }
+                
+                console.log("I don't even know what happenned");
+                throw "Unknown problem";
+                
+            }
+            catch(exc)
+            {
+                console.log(exc);
+                return "INVALID EXPRESSION";
+            }          
+            
+            console.log("We really shouldn't be here");
+        }
+
+
+        // once the page is loaded
+        $(document).ready(function () {
+
+            // this individually calls Format equation for each of the 
+            // Html tags with class "Math_eq"
+            $('.Math_eq').Format_equation();
+
+        });
+    </script>
+</head>
+
+<body>
+    <div class="Math_eq">={ _{x}{i} }{\frac {+{n}{1}}{+{n}{-{ 1 }{ i }}}}</div>
+
+
+    <br/>should be identical to:
+    <br/>
+
+
+    <div class="Sample_equation">x<sub>i</sub> =
+        <div class="fraction">
+            <div class="fraction-top">n + 1</div>
+            <div class="fraction-bottom">n + 1 - i</div>
+        </div>
+    </div>
+</body>
+
+</html>
