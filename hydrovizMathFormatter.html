@@ -47,8 +47,9 @@
             //parse_tree = parse_eq_text(raw_string);
             
             //A test case : (x - y) * 5
-            //parse_tree = ["=",["_","x","i"],["\\frac",["+","n","1"],["+","n",["-","1","i"]]]]; //returns a proper expression
+            parse_tree = ["=",["_","x","i"],["\\frac",["+","n","1"],["+","n",["-","1","i"]]]]; //returns a proper expression
             //parse_tree = ["_"]; //raises a MALFORMED EXPRESSION exception
+            //parse_tree = ["\\paren",["+","3","4"],"5"]
 
             /* 
                 replace equations in parse tree with formatted html   
@@ -113,25 +114,31 @@
             }
             //provided that wasn't met, we can continue operating as usual
             //as long as the array is of the correct size
-            try
+            
+            operator = equation_obj[0].trim();
+            //console.log("Successfully Extracted Operator: " + operator);
+            //paren is the only unary operator we will have to deal with
+            if(operator == "\\paren")
             {
-                operator = equation_obj[0].trim();
-                //console.log("Successfully Extracted Operator: " + operator);
-                //paren is the only unary operator we will have to deal with
-                if(operator == "\\paren")
+                if(equation_obj.length == 3)
                 {
-                    return "( " + convert_eq(equation_obj[1]) + ")";
+                    throw "TWO PARAMETERS IN PARENTHESES";
                 }
-                //if not paren, then we have a binary operator
-                else
+                
+                return "( " + convert_eq(equation_obj[1]) + " )";
+            }
+            //if not paren, then we have a binary operator
+            else
+            {
+                try
                 {
                     leftHand = convert_eq(equation_obj[1]);
                     rightHand = convert_eq(equation_obj[2]);
                 }
-            }
-            catch(err)
-            {
-                throw "MALFORMED SYNTAX";
+                catch(err)
+                {
+                    throw "MALFORMED SYNTAX";
+                }
             }
             
             //now that we have the full HTML for each part of the equation
